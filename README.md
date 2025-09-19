@@ -4,25 +4,11 @@ This project demonstrates a microservices architecture using GORM with PostgreSQ
 
 ## Architecture Overview
 
-```
-┌─────────────────────┐    ┌─────────────────────┐
-│  postgres_service   │    │ notification_service│
-│                     │    │                     │
-│ • Manages migrations│    │ • Handles notifications
-│ • Defines models    │    │ • Uses shared DB   │
-│ • Database setup    │    │ • CRUD operations  │
-└─────────┬───────────┘    └─────────┬───────────┘
-          │                          │
-          └─────────┬──────────────────┘
-                    │
-          ┌─────────▼───────────┐
-          │   PostgreSQL DB     │
-          │ measurements_storage│
-          │                     │
-          │ • Shared database   │
-          │ • Single source     │
-          │ • Centralized schema│
-          └─────────────────────┘
+```mermaid
+graph TD
+    A[postgres_service<br/>• Manages migrations<br/>• Defines models<br/>• Database setup] --> C[PostgreSQL DB<br/>measurements_storage<br/><br/>• Shared database<br/>• Single source<br/>• Centralized schema]
+    
+    B[notification_service<br/>• Handles notifications<br/>• Uses shared DB<br/>• CRUD operations] --> C
 ```
 
 ## Services

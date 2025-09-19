@@ -4,17 +4,19 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: postgres_db
+    env_file:
+      - ./.env
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: measurements_storage
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: ${DB_NAME:-measurements_storage}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres_service/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -26,11 +28,11 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: password
-      DB_NAME: measurements_storage
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      DB_NAME: ${DB_NAME:-measurements_storage}
       DB_SSL_MODE: disable
     volumes:
       - ./postgres_service:/app
@@ -50,11 +52,11 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: password
-      DB_NAME: measurements_storage
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      DB_NAME: ${DB_NAME:-measurements_storage}
       DB_SSL_MODE: disable
     volumes:
       - ./notification_service:/app
